@@ -57,25 +57,28 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
-  function removeTransition(e) {
-    if (e.propertyName !== 'transform') return;
-    e.target.classList.remove('playing');
+<script type="text/javascript">
+
+  function playSound(e){
+    const audio_elem = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key_elem = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    if(!audio_elem) return; // stop function from running / completing
+    audio_elem.currentTime = 0; // rewind audio to start
+    audio_elem.play();
+
+    key_elem.classList.add('playing');
   }
 
-  function playSound(e) {
-    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
-    const key = document.querySelector(`div[data-key="${e.keyCode}"]`);
-    if (!audio) return;
-
-    key.classList.add('playing');
-    audio.currentTime = 0;
-    audio.play();
+  function removeTransition(e){
+    if(e.propertyName !== 'transform') return; // skip if it's NOT a transform
+    this.classList.remove('playing');
   }
 
-  const keys = Array.from(document.querySelectorAll('.key'));
-  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
   window.addEventListener('keydown', playSound);
+
+  const key_elem = document.querySelectorAll('.key');
+  key_elem.forEach(key => key.addEventListener('transitionend', removeTransition));
+
 </script>
 
 
